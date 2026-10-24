@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>Разбор матча</title>
+  <meta name="description" content="Метки, заметки и рисунки поверх хоккейных трансляций VK Видео.">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://vk.com/js/api/videoplayer.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">↗</div>
+      <div>
+        <strong>Разбор матча</strong>
+        <span>Хоккейный видеоразбор</span>
+      </div>
+    </div>
+    <div class="status"><i id="statusDot"></i><span id="statusText">Подключаем VK Видео…</span></div>
+    <div class="top-actions">
+      <button class="ghost" id="importBtn" type="button">Загрузить метки</button>
+      <button class="ghost" id="exportBtn" type="button">Экспорт меток</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="source-card">
+      <label for="videoUrl">Ссылка на матч в VK Видео</label>
+      <div class="source-row">
+        <input id="videoUrl" type="url" value="https://vkvideo.ru/live-123531646_456239405" spellcheck="false">
+        <button id="loadBtn" class="primary" type="button">Открыть матч</button>
+      </div>
+      <p id="sourceHelp">Поддерживаются записи и трансляции VK Видео: ссылки video-… и live-…. Видео остаётся на стороне VK.</p>
+    </section>
+
+    <section class="workspace">
+      <div class="stage-column">
+        <div class="video-shell" id="videoShell">
+          <iframe id="vkPlayer" title="VK Видео" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock" allowfullscreen></iframe>
+          <div class="coach-banner" id="coachBanner" aria-hidden="true">
+            <img src="./assets/coach-logo.png" alt="">
+            <div class="coach-banner-copy">
+              <span>Хоккейный видеоразбор</span>
+              <strong>Разбор матча<br>с тренером</strong>
+            </div>
+          </div>
+          <canvas id="drawCanvas" aria-label="Слой рисования поверх видео"></canvas>
+          <div class="time-chip" id="timeChip">00:00</div>
+        </div>
+
+        <div class="toolbar" aria-label="Инструменты рисования">
+          <button class="tool active" data-tool="cursor" type="button" title="Управлять видео">↖ <span>Видео</span></button>
+          <button class="tool" data-tool="pen" type="button" title="Карандаш">✎ <span>Карандаш</span></button>
+          <button class="tool" data-tool="arrow" type="button" title="Стрелка">➜ <span>Стрелка</span></button>
+          <button class="tool" data-tool="circle" type="button" title="Окружность">◯ <span>Круг</span></button>
+          <button class="tool" data-tool="rect" type="button" title="Прямоугольник">□ <span>Зона</span></button>
+          <span class="separator"></span>
+          <div class="colors" aria-label="Цвет линии">
+            <button class="color active" data-color="#ff4d5e" style="--c:#ff4d5e" type="button" aria-label="Красный"></button>
+            <button class="color" data-color="#43a8ff" style="--c:#43a8ff" type="button" aria-label="Синий"></button>
+            <button class="color" data-color="#ffd43b" style="--c:#ffd43b" type="button" aria-label="Жёлтый"></button>
+            <button class="color" data-color="#ffffff" style="--c:#ffffff" type="button" aria-label="Белый"></button>
+          </div>
+          <label class="width-control">Толщина <input id="lineWidth" type="range" min="2" max="10" value="5"></label>
+          <span class="toolbar-spacer"></span>
+          <button class="tool icon-only" id="undoBtn" type="button" title="Отменить">↶</button>
+          <button class="tool icon-only" id="clearBtn" type="button" title="Очистить рисунок">⌫</button>
+        </div>
+        <p class="draw-hint" id="drawHint">Выберите инструмент рисования — видео автоматически остановится. При переходе к другой метке рисунок очистится.</p>
+      </div>
+
+      <aside class="notes-panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow">Навигация по матчу</span>
+            <h1>Метки</h1>
+          </div>
+          <span class="count" id="markerCount">0</span>
+        </div>
+
+        <form id="markerForm" class="marker-form">
+          <div class="form-row">
+            <label>Игрок
+              <input id="playerName" placeholder="Например, №17 Иван" required>
+            </label>
+            <label>Время
+              <div class="time-input-wrap">
+                <input id="markerTime" placeholder="00:00" inputmode="numeric" required>
+                <button id="captureTimeBtn" type="button" title="Взять текущее время">◎</button>
+              </div>
+            </label>
+          </div>
+          <label>Что разобрать
+            <textarea id="markerNote" rows="3" placeholder="Позиция, решение, вариант действия…"></textarea>
+          </label>
+          <button class="primary full" type="submit">＋ Добавить метку</button>
+        </form>
+
+        <div class="filter-row">
+          <input id="searchMarkers" type="search" placeholder="Найти игрока или заметку">
+          <select id="sortMarkers" aria-label="Сортировка меток">
+            <option value="time">По времени</option>
+            <option value="new">Сначала новые</option>
+          </select>
+        </div>
+
+        <div class="markers" id="markers"></div>
+        <div class="empty" id="emptyState">
+          <div>⌖</div>
+          <strong>Здесь появятся эпизоды</strong>
+          <p>Остановите видео, укажите игрока и сохраните метку.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <template id="markerTemplate">
+    <article class="marker-card">
+      <button class="marker-main" type="button">
+        <time></time>
+        <div><strong></strong><p></p></div>
+        <span class="has-drawing" aria-hidden="true">✎</span>
+      </button>
+      <button class="delete-marker" type="button" title="Удалить метку">×</button>
+    </article>
+  </template>
+
+  <input id="importInput" type="file" accept="application/json,.json" hidden>
+  <script src="./app.js"></script>
+</body>
+</html>
