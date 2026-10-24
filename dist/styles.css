@@ -44,7 +44,7 @@ input:focus,textarea:focus,select:focus { border-color:var(--blue); box-shadow:0
 .video-shell { position:relative; aspect-ratio:16/9; background:#02060a; overflow:hidden; container-type:inline-size; }
 .video-shell iframe,.video-shell canvas { position:absolute; inset:0; width:100%; height:100%; border:0; }
 .video-shell iframe { z-index:1; }
-.coach-banner { --notch:clamp(48px,6cqw,82px); position:absolute; z-index:2; right:1.4%; bottom:16.2%; width:54%; height:29.5%; padding:2.2% 10% 2.2% 4%; display:flex; align-items:center; justify-content:center; gap:5%; overflow:hidden; border:1px solid rgba(104,181,255,.75); border-radius:18px; clip-path:polygon(0 0,calc(100% - var(--notch)) 0,calc(100% - var(--notch)) var(--notch),100% var(--notch),100% 100%,0 100%); background:linear-gradient(135deg,rgba(4,26,52,.99),rgba(10,63,116,.99)); box-shadow:0 14px 34px rgba(0,0,0,.4); opacity:0; visibility:hidden; transform:translateY(8px); transition:.18s ease; pointer-events:none; }
+.coach-banner { --notch:clamp(48px,6cqw,82px); position:absolute; z-index:2; left:auto; top:auto; right:1.4cqw; bottom:9.1cqw; width:54cqw; height:16.6cqw; box-sizing:border-box; padding:2cqw 8cqw 2cqw 3cqw; display:flex; align-items:center; justify-content:center; gap:5%; overflow:hidden; border:1px solid rgba(104,181,255,.75); border-radius:18px; clip-path:polygon(0 0,calc(100% - var(--notch)) 0,calc(100% - var(--notch)) var(--notch),100% var(--notch),100% 100%,0 100%); background:linear-gradient(135deg,rgba(4,26,52,.99),rgba(10,63,116,.99)); box-shadow:0 14px 34px rgba(0,0,0,.4); opacity:0; visibility:hidden; transform:translateY(8px); transition:.18s ease; pointer-events:none; }
 .coach-banner::before { content:""; position:absolute; inset:0 0 auto; height:5px; background:linear-gradient(90deg,#fff 0 31%,#2580dc 31% 65%,#ed3348 65%); }
 .coach-banner::after { content:""; position:absolute; width:48%; aspect-ratio:1; right:-18%; top:-80%; border:1px solid rgba(255,255,255,.1); border-radius:50%; box-shadow:0 0 0 22px rgba(255,255,255,.025),0 0 0 44px rgba(255,255,255,.02); }
 .video-shell.paused .coach-banner { opacity:1; visibility:visible; transform:translateY(0); }
@@ -69,9 +69,12 @@ input:focus,textarea:focus,select:focus { border-color:var(--blue); box-shadow:0
 .toolbar-spacer { flex:1; }
 .draw-hint { margin:0; padding:9px 16px 11px; color:var(--muted); font-size:12px; border-top:1px solid var(--line); }
 @container (max-width: 650px) {
-  .coach-banner { --notch:clamp(38px,7cqw,52px); right:1.4%; bottom:16.2%; width:54%; height:29.5%; padding:2% 10% 2% 3%; border-radius:13px; }
+  .coach-banner { --notch:clamp(38px,7cqw,52px); right:1.4cqw; bottom:9.1cqw; width:54cqw; height:16.6cqw; padding:2cqw 8cqw 2cqw 3cqw; border-radius:13px; }
   .coach-banner-copy span { display:none; }
   .coach-banner-copy strong { font-size:clamp(11px,3cqw,19px); }
+}
+@media (min-aspect-ratio: 2/1) {
+  .coach-banner { right:1.3cqw; bottom:3.8cqw; width:58.4cqw; height:12.7cqw; padding:1.2cqw 8cqw 1.2cqw 3cqw; }
 }
 .notes-panel { min-height:680px; padding:20px; }
 .panel-head { display:flex; align-items:end; justify-content:space-between; margin-bottom:18px; }
